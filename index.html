@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (2016 Retro Edition)</title>
+    <title>Windows 11 Simulator (TV Edition)</title>
     <style>
         body {
             margin: 0;
@@ -16,12 +16,17 @@
         }
 
         /* Desktop Icons */
+        .desktop-icons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
         .desktop-icon {
             width: 70px;
             height: 80px;
-            position: absolute;
-            top: 30px;
-            left: 30px;
             text-align: center;
             color: white;
             cursor: pointer;
@@ -45,7 +50,7 @@
             left: 0;
             width: 100%;
             height: 48px;
-            background: rgba(32, 32, 32, 0.85);
+            background: rgba(32, 32, 32, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: center;
@@ -67,6 +72,15 @@
         }
         .taskbar-btn:hover {
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        #clock {
+            position: absolute;
+            right: 15px;
+            color: white;
+            font-size: 12px;
+            text-align: right;
+            line-height: 16px;
         }
 
         /* Start Menu */
@@ -104,12 +118,12 @@
             background: rgba(255,255,255,0.15);
         }
 
-        /* Window (Notepad) */
-        #window {
+        /* Windows */
+        .window {
             position: absolute;
-            top: 60px;
-            left: 60px;
-            width: 400px;
+            top: 50px;
+            left: 50px;
+            width: 350px;
             height: 280px;
             background: #f3f3f3;
             border: 1px solid #ccc;
@@ -130,7 +144,11 @@
             padding: 0 10px;
             font-size: 12px;
             color: #333;
-            cursor: move;
+            cursor: pointer;
+        }
+        /* Wenn Fenster am Cursor klebt, Header gelb markieren als Signal */
+        .window.dragging .window-header {
+            background: #fce100;
         }
         .window-close {
             background: #e81123;
@@ -144,6 +162,7 @@
         .window-body {
             flex: 1;
             padding: 10px;
+            overflow: hidden;
         }
         .window-body textarea {
             width: 100%;
@@ -153,34 +172,101 @@
             resize: none;
             font-family: Arial;
         }
+
+        /* Calculator styles */
+        #calc-display {
+            width: 100%;
+            height: 40px;
+            background: white;
+            border: 1px solid #ccc;
+            font-size: 20px;
+            text-align: right;
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .calc-keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            height: 160px;
+        }
+        .calc-keys button {
+            background: #fff;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .calc-keys button:hover {
+            background: #e5e5e5;
+        }
     </style>
 </head>
-<body>
+<body onmousemove="moveWindow(event)">
 
-    <!-- Desktop Icon -->
-    <div class="desktop-icon" onclick="toggleWindow()">
-        <div class="icon-img">📝</div>
-        Notizblock
+    <!-- Desktop Icons -->
+    <div class="desktop-icons">
+        <div class="desktop-icon" onclick="openWindow('notepad-win')">
+            <div class="icon-img">📝</div>
+            Notizblock
+        </div>
+        <div class="desktop-icon" onclick="openWindow('calc-win')">
+            <div class="icon-img">🔢</div>
+            Rechner
+        </div>
     </div>
 
-    <!-- Window -->
-    <div id="window">
-        <div class="window-header">
-            <span>Editor - Notizblock</span>
-            <button class="window-close" onclick="toggleWindow()">X</button>
+    <!-- Notepad Window -->
+    <div id="notepad-win" class="window" onclick="bringToFront('notepad-win')">
+        <div class="window-header" onclick="toggleDrag('notepad-win')">
+            <span>Editor - Notizblock (Klick zum Bewegen)</span>
+            <button class="window-close" onclick="closeWindow('notepad-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body">
-            <textarea placeholder="Schreibe hier etwas auf deinem Dyon TV..."></textarea>
+            <textarea placeholder="Schreibe hier..."></textarea>
+        </div>
+    </div>
+
+    <!-- Calculator Window -->
+    <div id="calc-win" class="window" onclick="bringToFront('calc-win')" style="left: 120px; top: 90px; width: 260px; height: 310px;">
+        <div class="window-header" onclick="toggleDrag('calc-win')">
+            <span>Taschenrechner (Klick zum Bewegen)</span>
+            <button class="window-close" onclick="closeWindow('calc-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body">
+            <div id="calc-display">0</div>
+            <div class="calc-keys">
+                <button onclick="calcNum('7')">7</button>
+                <button onclick="calcNum('8')">8</button>
+                <button onclick="calcNum('9')">9</button>
+                <button onclick="calcOp('/')">/</button>
+                <button onclick="calcNum('4')">4</button>
+                <button onclick="calcNum('5')">5</button>
+                <button onclick="calcNum('6')">6</button>
+                <button onclick="calcOp('*')">*</button>
+                <button onclick="calcNum('1')">1</button>
+                <button onclick="calcNum('2')">2</button>
+                <button onclick="calcNum('3')">3</button>
+                <button onclick="calcOp('-')">-</button>
+                <button onclick="calcNum('0')">0</button>
+                <button onclick="calcClear()">C</button>
+                <button onclick="calcEquals()">=</button>
+                <button onclick="calcOp('+')">+</button>
+            </div>
         </div>
     </div>
 
     <!-- Start Menu -->
     <div id="start-menu">
         <h3>Angeheftet</h3>
-        <div class="start-app-item" onclick="toggleWindow(); toggleStart();">
-            📝 Notizblock öffnen
+        <div class="start-app-item" onclick="openWindow('notepad-win'); toggleStart();">
+            📝 Notizblock
         </div>
-        <div class="start-app-item" onclick="alert('Windows 11 auf dem Dyon TV läuft stabil!');">
+        <div class="start-app-item" onclick="openWindow('calc-win'); toggleStart();">
+            🔢 Taschenrechner
+        </div>
+        <div class="start-app-item" onclick="alert('Dyon TV Windows 11 laeuft super!');">
             ℹ️ System-Info
         </div>
     </div>
@@ -188,11 +274,17 @@
     <!-- Taskbar -->
     <div id="taskbar">
         <button class="taskbar-btn" onclick="toggleStart()" title="Start">⊞</button>
-        <button class="taskbar-btn" onclick="toggleWindow()" title="Notizblock">📝</button>
+        <button class="taskbar-btn" onclick="openWindow('notepad-win')" title="Notizblock">📝</button>
+        <button class="taskbar-btn" onclick="openWindow('calc-win')" title="Rechner">🔢</button>
+        <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
 
     <script>
-        // 2016-kompatibles ES5 JavaScript
+        var highestZ = 100;
+        var activeDraggedWindow = null;
+        var offsetX = 0;
+        var offsetY = 0;
+
         function toggleStart() {
             var menu = document.getElementById("start-menu");
             if (menu.style.display === "flex") {
@@ -202,14 +294,91 @@
             }
         }
 
-        function toggleWindow() {
-            var win = document.getElementById("window");
-            if (win.style.display === "flex") {
-                win.style.display = "none";
+        function openWindow(id) {
+            var win = document.getElementById(id);
+            win.style.display = "flex";
+            bringToFront(id);
+            document.getElementById("start-menu").style.display = "none";
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = "none";
+            if (activeDraggedWindow === id) {
+                activeDraggedWindow = null;
+            }
+        }
+
+        function bringToFront(id) {
+            highestZ++;
+            document.getElementById(id).style.zIndex = highestZ;
+        }
+
+        // Ein-Klick-Toggle zum Greifen und Loslassen für Fernbedienungen
+        function toggleDrag(id) {
+            var win = document.getElementById(id);
+            if (activeDraggedWindow === id) {
+                // Loslassen
+                activeDraggedWindow = null;
+                win.classList.remove("dragging");
             } else {
-                win.style.display = "flex";
+                // Wenn ein anderes Fenster aktiv war, das erst loslassen
+                if (activeDraggedWindow) {
+                    document.getElementById(activeDraggedWindow).classList.remove("dragging");
+                }
+                // Greifen
+                activeDraggedWindow = id;
+                win.classList.add("dragging");
+                bringToFront(id);
+            }
+            event.stopPropagation();
+        }
+
+        // Fenster bewegen, wenn es im "Aktiv"-Modus ist
+        function moveWindow(e) {
+            if (!activeDraggedWindow) return;
+            var win = document.getElementById(activeDraggedWindow);
+            // Zentriert das Fenster leicht unter den Cursor beim Bewegen
+            win.style.left = (e.clientX - 100) + "px";
+            win.style.top = (e.clientY - 15) + "px";
+        }
+
+        // Clock Update
+        function updateClock() {
+            var d = new Date();
+            var hours = d.getHours();
+            var minutes = d.getMinutes();
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            document.getElementById("clock").innerHTML = hours + ":" + minutes + "<br><small>Dyon TV</small>";
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Calculator Logic
+        var calcExpression = "";
+        function calcNum(val) {
+            calcExpression += val;
+            document.getElementById("calc-display").innerText = calcExpression;
+        }
+        function calcOp(op) {
+            calcExpression += op;
+            document.getElementById("calc-display").innerText = calcExpression;
+        }
+        function calcClear() {
+            calcExpression = "";
+            document.getElementById("calc-display").innerText = "0";
+        }
+        function calcEquals() {
+            try {
+                var res = eval(calcExpression);
+                document.getElementById("calc-display").innerText = res;
+                calcExpression = res.toString();
+            } catch (e) {
+                document.getElementById("calc-display").innerText = "Fehler";
+                calcExpression = "";
             }
         }
     </script>
 </body>
 </html>
+
