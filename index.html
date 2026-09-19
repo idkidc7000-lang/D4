@@ -1,166 +1,215 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lite YT Player (2016 Hardware)</title>
+    <meta charset="utf-8">
+    <title>Windows 11 Simulator (2016 Retro Edition)</title>
     <style>
-        /* Verhindert Layout-Shifts und nutzt Hardware-Beschleunigung */
-        body { background: #000; margin: 0; font-family: sans-serif; overflow: hidden; }
-        .player-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
-        
-        /* Das eigentliche Video-Fenster */
-        #video-placeholder { width: 100%; height: 100%; transform: translateZ(0); }
-
-        /* Minimalistische Overlays (nur sichtbar, wenn gebraucht) */
-        .controls-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            padding: 20px; display: flex; align-items: center; gap: 15px;
-            opacity: 1; transition: opacity 0.3s ease; z-index: 10;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            background-image: linear-gradient(135deg, #005c8a, #002b3d);
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
         }
-        .controls-overlay.hidden { opacity: 0; pointer-events: none; }
 
-        /* Große, leicht zu treffende Buttons ohne CSS-Schnickschnack */
-        button {
-            background: #e60000; color: white; border: none; padding: 12px 24px;
-            font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer;
+        /* Desktop Icons */
+        .desktop-icon {
+            width: 70px;
+            height: 80px;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px black;
         }
-        button:active { background: #b30000; }
+        .desktop-icon div.icon-img {
+            width: 40px;
+            height: 40px;
+            background: #0078d7;
+            margin: 0 auto 5px auto;
+            border-radius: 8px;
+            line-height: 40px;
+            font-size: 20px;
+        }
 
-        /* Performance-schonender Fortschrittsbalken */
-        .progress-bar {
-            flex-grow: 1; height: 8px; background: rgba(255,255,255,0.3);
-            position: relative; border-radius: 4px; cursor: pointer;
+        /* Taskbar */
+        #taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            background: rgba(32, 32, 32, 0.85);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
         }
-        .progress-fill { height: 100%; width: 0%; background: #e60000; border-radius: 4px; }
+
+        .taskbar-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 0 4px;
+            outline: none;
+        }
+        .taskbar-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Start Menu */
+        #start-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 380px;
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            color: white;
+        }
+        #start-menu h3 {
+            margin-top: 0;
+            font-size: 14px;
+            color: #aaa;
+        }
+        .start-app-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .start-app-item:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Window (Notepad) */
+        #window {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            width: 400px;
+            height: 280px;
+            background: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        .window-header {
+            height: 30px;
+            background: #e1e1e1;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            color: #333;
+            cursor: move;
+        }
+        .window-close {
+            background: #e81123;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .window-body {
+            flex: 1;
+            padding: 10px;
+        }
+        .window-body textarea {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            resize: none;
+            font-family: Arial;
+        }
     </style>
 </head>
 <body>
 
-<div class="player-container">
-    <!-- Der Platzhalter wird von der API durch das IFrame ersetzt -->
-    <div id="video-placeholder"></div>
+    <!-- Desktop Icon -->
+    <div class="desktop-icon" onclick="toggleWindow()">
+        <div class="icon-img">📝</div>
+        Notizblock
+    </div>
 
-    <!-- Steuerungsoverlay -->
-    <div class="controls-overlay" id="controls">
-        <button id="play-btn" onclick="togglePlayback()">Pause</button>
-        <div class="progress-bar" onclick="seek(event)">
-            <div class="progress-fill" id="progress"></div>
+    <!-- Window -->
+    <div id="window">
+        <div class="window-header">
+            <span>Editor - Notizblock</span>
+            <button class="window-close" onclick="toggleWindow()">X</button>
+        </div>
+        <div class="window-body">
+            <textarea placeholder="Schreibe hier etwas auf deinem Dyon TV..."></textarea>
         </div>
     </div>
-</div>
 
-<script>
-    // 1. Laden der YouTube IFrame API (Asynchron, blockiert das Rendering nicht)
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    <!-- Start Menu -->
+    <div id="start-menu">
+        <h3>Angeheftet</h3>
+        <div class="start-app-item" onclick="toggleWindow(); toggleStart();">
+            📝 Notizblock öffnen
+        </div>
+        <div class="start-app-item" onclick="alert('Windows 11 auf dem Dyon TV läuft stabil!');">
+            ℹ️ System-Info
+        </div>
+    </div>
 
-    var player;
-    var controls = document.getElementById('controls');
-    var playBtn = document.getElementById('play-btn');
-    var progressFill = document.getElementById('progress');
-    var hideTimeout;
+    <!-- Taskbar -->
+    <div id="taskbar">
+        <button class="taskbar-btn" onclick="toggleStart()" title="Start">⊞</button>
+        <button class="taskbar-btn" onclick="toggleWindow()" title="Notizblock">📝</button>
+    </div>
 
-    // 2. Wird automatisch aufgerufen, sobald die API bereit ist
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('video-placeholder', {
-            videoId: 'M7lc1UVf-VE', // Ersetze dies mit deiner Video-ID
-            playerVars: {
-                'autoplay': 1,
-                'controls': 0,          // Deaktiviert den schweren Standard-Player
-                'rel': 0,               // Keine fremden Videoempfehlungen am Ende
-                'showinfo': 0,          // Veraltet, spart aber Parsing-Zeit auf Alt-Systemen
-                'iv_load_policy': 3,    // Schaltet störende Einblendungen ab
-                'modestbranding': 1,
-                'playsinline': 1
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }
-
-    function onPlayerReady(event) {
-        // Startet ein Intervall zur Aktualisierung des Fortschrittsbalkens (schonend alle 500ms)
-        setInterval(updateProgress, 500);
-        setupOverlayTimer();
-    }
-
-    function onPlayerStateChange(event) {
-        // Zustand 1 = Abspielen, Zustand 2 = Pausiert
-        if (event.data == YT.PlayerState.PLAYING) {
-            playBtn.innerHTML = "Pause";
-            setupOverlayTimer();
-        } else {
-            playBtn.innerHTML = "Play";
-            showControls(); // Zeigt die Steuerung dauerhaft, wenn pausiert
-            clearTimeout(hideTimeout);
-        }
-    }
-
-    // 3. Wiedergabe-Logik
-    function togglePlayback() {
-        if (player.getPlayerState() == YT.PlayerState.PLAYING) {
-            player.pauseVideo();
-        } else {
-            player.playVideo();
-        }
-    }
-
-    // Aktualisiert die rote Timeline ohne rechenintensive CSS-Transitions
-    function updateProgress() {
-        if (player && player.getDuration) {
-            var currentTime = player.getCurrentTime();
-            var duration = player.getDuration();
-            if (duration > 0) {
-                var percentage = (currentTime / duration) * 100;
-                progressFill.style.width = percentage + "%";
+    <script>
+        // 2016-kompatibles ES5 JavaScript
+        function toggleStart() {
+            var menu = document.getElementById("start-menu");
+            if (menu.style.display === "flex") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "flex";
             }
         }
-    }
 
-    // Spulen im Video per Klick auf die Timeline
-    function seek(event) {
-        var progressBar = event.currentTarget;
-        var rect = progressBar.getBoundingClientRect();
-        var clickX = event.clientX - rect.left;
-        var width = rect.width;
-        var percentage = clickX / width;
-        var duration = player.getDuration();
-        player.seekTo(duration * percentage, true);
-    }
-
-    // 4. Performance-Tricks für flüssiges Interface (Ausblenden bei Inaktivität)
-    function setupOverlayTimer() {
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(function() {
-            controls.classList.add('hidden');
-        }, 3000); // Blendet Controls nach 3 Sekunden aus
-    }
-
-    function showControls() {
-        controls.classList.remove('hidden');
-    }
-
-    // Registriert Bewegungen, um das Overlay auf Alt-Geräten wieder einzublenden
-    document.addEventListener('mousemove', function() {
-        showControls();
-        if (player && player.getPlayerState() == YT.PlayerState.PLAYING) {
-            setupOverlayTimer();
+        function toggleWindow() {
+            var win = document.getElementById("window");
+            if (win.style.display === "flex") {
+                win.style.display = "none";
+            } else {
+                win.style.display = "flex";
+            }
         }
-    });
-    
-    document.addEventListener('click', function() {
-        showControls();
-        if (player && player.getPlayerState() == YT.PlayerState.PLAYING) {
-            setupOverlayTimer();
-        }
-    });
-</script>
-
+    </script>
 </body>
 </html>
