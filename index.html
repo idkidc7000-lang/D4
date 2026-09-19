@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (Perfect Resize Edition)</title>
+    <title>Windows 11 Simulator (Working Resize)</title>
     <style>
         body {
             margin: 0;
@@ -148,10 +148,10 @@
             cursor: pointer;
         }
         .window.dragging .window-header {
-            background: #fce100;
+            background: #fce100; /* Gelb beim Verschieben */
         }
         .window.resizing .window-resizer {
-            background: #0078d7;
+            background: #0078d7; /* Blau beim Vergrößern */
             color: white;
         }
         .window-close {
@@ -167,23 +167,22 @@
         .window-body {
             flex: 1;
             padding: 12px;
-            overflow: hidden;
             background: white;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            position: relative;
+            overflow: hidden;
         }
         .window-body textarea {
             width: 100%;
-            height: calc(100% - 40px);
+            height: 100%;
             box-sizing: border-box;
             border: 1px solid #ddd;
             resize: none;
             font-family: Arial;
         }
 
-        /* PERFEKT PLATZIERT: Sitzt jetzt exakt in der unteren rechten Ecke ohne Abstand, aber groß genug zum Treffen */
+        /* Exakt da platziert, wo es auf deinem Bild war, aber jetzt voll funktionsfähig */
         .window-resizer {
             position: absolute;
             bottom: 0;
@@ -201,6 +200,7 @@
             font-size: 20px;
             font-weight: bold;
             color: #333;
+            z-index: 10;
         }
 
         /* Calculator styles */
@@ -220,7 +220,6 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
             flex: 1;
-            margin-bottom: 35px;
         }
         .calc-keys button {
             background: #fff;
@@ -281,8 +280,8 @@
         </div>
         <div class="window-body">
             <textarea placeholder="Schreibe hier..."></textarea>
-            <div class="window-resizer" onclick="toggleResize('notepad-win')" title="Größe ändern">⤢</div>
         </div>
+        <div class="window-resizer" onclick="toggleResize('notepad-win')" title="Größe ändern">⤢</div>
     </div>
 
     <!-- Calculator Window -->
@@ -311,8 +310,8 @@
                 <button onclick="calcEquals()">=</button>
                 <button onclick="calcOp('+')">+</button>
             </div>
-            <div class="window-resizer" onclick="toggleResize('calc-win')" title="Größe ändern">⤢</div>
         </div>
+        <div class="window-resizer" onclick="toggleResize('calc-win')" title="Größe ändern">⤢</div>
     </div>
 
     <!-- Settings Window -->
@@ -329,8 +328,8 @@
                 <button class="bg-btn" onclick="changeBackground('linear-gradient(135deg, #003d1a, #008a3d)')">🌲 Retro Matrix Grün</button>
                 <button class="bg-btn" onclick="changeBackground('#111111')">⬛ Tiefes Schwarz</button>
             </div>
-            <div class="window-resizer" onclick="toggleResize('settings-win')" title="Größe ändern">⤢</div>
         </div>
+        <div class="window-resizer" onclick="toggleResize('settings-win')" title="Größe ändern">⤢</div>
     </div>
 
     <!-- Start Menu -->
@@ -345,7 +344,7 @@
         <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">
             ⚙️ Einstellungen
         </div>
-        <div class="start-app-item" onclick="alert('Dyon TV Resizer v3 aktiv!');">
+        <div class="start-app-item" onclick="alert('Dyon TV Resizer Fix aktiv!');">
             ℹ️ System-Info
         </div>
     </div>
