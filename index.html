@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (Extended Edition)</title>
+    <title>Windows 11 Simulator (Maximal Edition)</title>
     <style>
         body {
             margin: 0;
@@ -90,7 +90,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 320px;
-            height: 420px;
+            height: 460px;
             background: rgba(30, 30, 30, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -108,11 +108,12 @@
         }
         .start-app-item {
             background: rgba(255,255,255,0.05);
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 8px;
+            margin-bottom: 6px;
             border-radius: 4px;
             cursor: pointer;
             text-align: left;
+            font-size: 13px;
         }
         .start-app-item:hover {
             background: rgba(255,255,255,0.15);
@@ -183,7 +184,7 @@
             font-family: Arial;
         }
 
-        /* Resizer Knopf angepasst an die TV-Position */
+        /* Resizer Knopf angepasst */
         .window-resizer {
             position: absolute;
             bottom: -8px;
@@ -304,32 +305,48 @@
             color: #aaa;
             margin-top: 5px;
         }
+
+        /* Paint App styles */
+        #paint-canvas {
+            flex: 1;
+            background: white;
+            border: 1px solid #ccc;
+            cursor: crosshair;
+        }
+
+        /* Weather App styles */
+        .weather-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(to bottom, #4a90e2, #50e3c2);
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .weather-temp {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        .weather-desc {
+            font-size: 18px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body id="main-desktop" onmousemove="handleMouseMove(event)" style="background-image: linear-gradient(135deg, #005c8a, #002b3d);">
 
     <!-- Desktop Icons -->
     <div class="desktop-icons">
-        <div class="desktop-icon" onclick="openWindow('notepad-win')">
-            <div class="icon-img">📝</div>
-            Notizblock
-        </div>
-        <div class="desktop-icon" onclick="openWindow('calc-win')">
-            <div class="icon-img">🔢</div>
-            Rechner
-        </div>
-        <div class="desktop-icon" onclick="openWindow('browser-win')">
-            <div class="icon-img">🌐</div>
-            Browser
-        </div>
-        <div class="desktop-icon" onclick="openWindow('clock-win')">
-            <div class="icon-img">⏰</div>
-            Uhr
-        </div>
-        <div class="desktop-icon" onclick="openWindow('settings-win')">
-            <div class="icon-img">⚙️</div>
-            Einstellungen
-        </div>
+        <div class="desktop-icon" onclick="openWindow('notepad-win')"><div class="icon-img">📝</div>Notizblock</div>
+        <div class="desktop-icon" onclick="openWindow('calc-win')"><div class="icon-img">🔢</div>Rechner</div>
+        <div class="desktop-icon" onclick="openWindow('browser-win')"><div class="icon-img">🌐</div>Browser</div>
+        <div class="desktop-icon" onclick="openWindow('clock-win')"><div class="icon-img">⏰</div>Uhr</div>
+        <div class="desktop-icon" onclick="openWindow('paint-win')"><div class="icon-img">🎨</div>Paint</div>
+        <div class="desktop-icon" onclick="openWindow('weather-win')"><div class="icon-img">⛅</div>Wetter</div>
+        <div class="desktop-icon" onclick="openWindow('settings-win')"><div class="icon-img">⚙️</div>Einstellungen</div>
     </div>
 
     <!-- Notepad Window -->
@@ -353,28 +370,16 @@
         <div class="window-body">
             <div id="calc-display">0</div>
             <div class="calc-keys">
-                <button onclick="calcNum('7')">7</button>
-                <button onclick="calcNum('8')">8</button>
-                <button onclick="calcNum('9')">9</button>
-                <button onclick="calcOp('/')">/</button>
-                <button onclick="calcNum('4')">4</button>
-                <button onclick="calcNum('5')">5</button>
-                <button onclick="calcNum('6')">6</button>
-                <button onclick="calcOp('*')">*</button>
-                <button onclick="calcNum('1')">1</button>
-                <button onclick="calcNum('2')">2</button>
-                <button onclick="calcNum('3')">3</button>
-                <button onclick="calcOp('-')">-</button>
-                <button onclick="calcNum('0')">0</button>
-                <button onclick="calcClear()">C</button>
-                <button onclick="calcEquals()">=</button>
-                <button onclick="calcOp('+')">+</button>
+                <button onclick="calcNum('7')">7</button><button onclick="calcNum('8')">8</button><button onclick="calcNum('9')">9</button><button onclick="calcOp('/')">/</button>
+                <button onclick="calcNum('4')">4</button><button onclick="calcNum('5')">5</button><button onclick="calcNum('6')">6</button><button onclick="calcOp('*')">*</button>
+                <button onclick="calcNum('1')">1</button><button onclick="calcNum('2')">2</button><button onclick="calcNum('3')">3</button><button onclick="calcOp('-')">-</button>
+                <button onclick="calcNum('0')">0</button><button onclick="calcClear()">C</button><button onclick="calcEquals()">=</button><button onclick="calcOp('+')">+</button>
             </div>
             <div class="window-resizer" onclick="toggleResize('calc-win')" title="Größe ändern">⤢</div>
         </div>
     </div>
 
-    <!-- Browser Window (NEU) -->
+    <!-- Browser Window -->
     <div id="browser-win" class="window" onclick="bringToFront('browser-win')" style="left: 140px; top: 100px; width: 420px; height: 320px;">
         <div class="window-header" onclick="toggleDrag('browser-win')">
             <span>🌐 Internet Browser</span>
@@ -387,13 +392,13 @@
             </div>
             <div class="browser-content" id="browser-view">
                 <h3>Willkommen im Web!</h3>
-                <p>Gib oben eine Adresse ein und klicke auf "Gehe zu". (Dies ist ein sicherer Simulator-Browser).</p>
+                <p>Gib oben eine Adresse ein und klicke auf "Gehe zu".</p>
             </div>
             <div class="window-resizer" onclick="toggleResize('browser-win')" title="Größe ändern">⤢</div>
         </div>
     </div>
 
-    <!-- Clock App Window (NEU) -->
+    <!-- Clock App Window -->
     <div id="clock-win" class="window" onclick="bringToFront('clock-win')" style="left: 200px; top: 150px; width: 300px; height: 220px;">
         <div class="window-header" onclick="toggleDrag('clock-win')">
             <span>⏰ Uhr & Weltzeit</span>
@@ -405,6 +410,35 @@
                 <div class="big-date" id="app-date-display">Datum laden...</div>
             </div>
             <div class="window-resizer" onclick="toggleResize('clock-win')" title="Größe ändern">⤢</div>
+        </div>
+    </div>
+
+    <!-- Paint Window (NEU) -->
+    <div id="paint-win" class="window" onclick="bringToFront('paint-win')" style="left: 220px; top: 80px; width: 400px; height: 350px;">
+        <div class="window-header" onclick="toggleDrag('paint-win')">
+            <span>🎨 Paint (Malen)</span>
+            <button class="window-close" onclick="closeWindow('paint-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body">
+            <p style="margin: 0 0 5px 0; font-size:12px; color:#555;">Klicke und ziehe mit der Maus, um zu malen!</p>
+            <canvas id="paint-canvas"></canvas>
+            <div class="window-resizer" onclick="toggleResize('paint-win')" title="Größe ändern">⤢</div>
+        </div>
+    </div>
+
+    <!-- Weather Window (NEU) -->
+    <div id="weather-win" class="window" onclick="bringToFront('weather-win')" style="left: 260px; top: 120px; width: 280px; height: 220px;">
+        <div class="window-header" onclick="toggleDrag('weather-win')">
+            <span>⛅ Wetter</span>
+            <button class="window-close" onclick="closeWindow('weather-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body" style="padding:0;">
+            <div class="weather-container">
+                <div style="font-size: 14px;">📍 Aktueller Standort (TV-Modus)</div>
+                <div class="weather-temp">21°C</div>
+                <div class="weather-desc">☀️ Sonnig & Angenehm</div>
+            </div>
+            <div class="window-resizer" onclick="toggleResize('weather-win')" title="Größe ändern">⤢</div>
         </div>
     </div>
 
@@ -433,6 +467,8 @@
         <div class="start-app-item" onclick="openWindow('calc-win'); toggleStart();">🔢 Taschenrechner</div>
         <div class="start-app-item" onclick="openWindow('browser-win'); toggleStart();">🌐 Internet Browser</div>
         <div class="start-app-item" onclick="openWindow('clock-win'); toggleStart();">⏰ Uhr App</div>
+        <div class="start-app-item" onclick="openWindow('paint-win'); toggleStart();">🎨 Paint</div>
+        <div class="start-app-item" onclick="openWindow('weather-win'); toggleStart();">⛅ Wetter</div>
         <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">⚙️ Einstellungen</div>
     </div>
 
@@ -443,6 +479,8 @@
         <button class="taskbar-btn" onclick="openWindow('calc-win')" title="Rechner">🔢</button>
         <button class="taskbar-btn" onclick="openWindow('browser-win')" title="Browser">🌐</button>
         <button class="taskbar-btn" onclick="openWindow('clock-win')" title="Uhr">⏰</button>
+        <button class="taskbar-btn" onclick="openWindow('paint-win')" title="Paint">🎨</button>
+        <button class="taskbar-btn" onclick="openWindow('weather-win')" title="Wetter">⛅</button>
         <button class="taskbar-btn" onclick="openWindow('settings-win')" title="Einstellungen">⚙️</button>
         <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
@@ -454,11 +492,7 @@
 
         function toggleStart() {
             var menu = document.getElementById("start-menu");
-            if (menu.style.display === "flex") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "flex";
-            }
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
 
         function openWindow(id) {
@@ -466,6 +500,7 @@
             win.style.display = "flex";
             bringToFront(id);
             document.getElementById("start-menu").style.display = "none";
+            if(id === 'paint-win') initPaint();
         }
 
         function closeWindow(id) {
@@ -490,9 +525,7 @@
                 activeDraggedWindow = null;
                 win.classList.remove("dragging");
             } else {
-                if (activeDraggedWindow) {
-                    document.getElementById(activeDraggedWindow).classList.remove("dragging");
-                }
+                if (activeDraggedWindow) document.getElementById(activeDraggedWindow).classList.remove("dragging");
                 activeDraggedWindow = id;
                 win.classList.add("dragging");
                 bringToFront(id);
@@ -511,9 +544,7 @@
                 activeResizedWindow = null;
                 win.classList.remove("resizing");
             } else {
-                if (activeResizedWindow) {
-                    document.getElementById(activeResizedWindow).classList.remove("resizing");
-                }
+                if (activeResizedWindow) document.getElementById(activeResizedWindow).classList.remove("resizing");
                 activeResizedWindow = id;
                 win.classList.add("resizing");
                 bringToFront(id);
@@ -530,7 +561,6 @@
                 var win = document.getElementById(activeResizedWindow);
                 var newWidth = e.clientX - win.offsetLeft;
                 var newHeight = e.clientY - win.offsetTop;
-                
                 if (newWidth > 220) win.style.width = newWidth + "px";
                 if (newHeight > 180) win.style.height = newHeight + "px";
             }
@@ -546,10 +576,8 @@
             if (minutes < 10) minutes = "0" + minutes;
             if (seconds < 10) seconds = "0" + seconds;
 
-            // Taskbar Uhr
             document.getElementById("clock").innerHTML = hours + ":" + minutes + "<br><small>Dyon TV</small>";
 
-            // Uhr App Anzeige
             var appClock = document.getElementById("app-clock-display");
             if(appClock) {
                 appClock.innerText = hours + ":" + minutes + ":" + seconds;
@@ -569,27 +597,43 @@
             }
         }
 
-        // Browser Funktion
         function loadBrowserPage() {
             var url = document.getElementById("browser-url").value;
             var view = document.getElementById("browser-view");
-            view.innerHTML = "<h3>Lade " + url + "...</h3><p>Verbindung erfolgreich hergestellt. Willst du nach etwas suchen?</p>";
+            view.innerHTML = "<h3>Lade " + url + "...</h3><p>Verbindung erfolgreich hergestellt.</p>";
         }
 
-        // Calculator Logik
+        // Paint Logik
+        function initPaint() {
+            var canvas = document.getElementById('paint-canvas');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight - 40;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            var painting = false;
+            canvas.onmousedown = function(e) { painting = true; draw(e); };
+            canvas.onmouseup = function() { painting = false; ctx.beginPath(); };
+            canvas.onmousemove = function(e) { if(painting) draw(e); };
+
+            function draw(e) {
+                var rect = canvas.getBoundingClientRect();
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#0078d7';
+                ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            }
+        }
+
+        // Rechner Logik
         var calcExpression = "";
-        function calcNum(val) {
-            calcExpression += val;
-            document.getElementById("calc-display").innerText = calcExpression;
-        }
-        function calcOp(op) {
-            calcExpression += op;
-            document.getElementById("calc-display").innerText = calcExpression;
-        }
-        function calcClear() {
-            calcExpression = "";
-            document.getElementById("calc-display").innerText = "0";
-        }
+        function calcNum(val) { calcExpression += val; document.getElementById("calc-display").innerText = calcExpression; }
+        function calcOp(op) { calcExpression += op; document.getElementById("calc-display").innerText = calcExpression; }
+        function calcClear() { calcExpression = ""; document.getElementById("calc-display").innerText = "0"; }
         function calcEquals() {
             try {
                 var res = eval(calcExpression);
