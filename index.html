@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (TV Position Fix)</title>
+    <title>Windows 11 Simulator (Extended Edition)</title>
     <style>
         body {
             margin: 0;
@@ -90,7 +90,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 320px;
-            height: 380px;
+            height: 420px;
             background: rgba(30, 30, 30, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -172,6 +172,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
         .window-body textarea {
             width: 100%;
@@ -182,7 +183,7 @@
             font-family: Arial;
         }
 
-        /* Etwas nach unten und rechts verschoben, damit er perfekt zum TV-Cursor passt */
+        /* Resizer Knopf angepasst an die TV-Position */
         .window-resizer {
             position: absolute;
             bottom: -8px;
@@ -252,6 +253,57 @@
         .bg-btn:hover {
             background: #d0d0d0;
         }
+
+        /* Browser styles */
+        .browser-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        .browser-bar input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .browser-bar button {
+            padding: 6px 12px;
+            background: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .browser-content {
+            flex: 1;
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        /* Clock App styles */
+        .clock-app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #111;
+            color: #00ffcc;
+            border-radius: 4px;
+        }
+        .big-digital-clock {
+            font-size: 42px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        .big-date {
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body id="main-desktop" onmousemove="handleMouseMove(event)" style="background-image: linear-gradient(135deg, #005c8a, #002b3d);">
@@ -265,6 +317,14 @@
         <div class="desktop-icon" onclick="openWindow('calc-win')">
             <div class="icon-img">🔢</div>
             Rechner
+        </div>
+        <div class="desktop-icon" onclick="openWindow('browser-win')">
+            <div class="icon-img">🌐</div>
+            Browser
+        </div>
+        <div class="desktop-icon" onclick="openWindow('clock-win')">
+            <div class="icon-img">⏰</div>
+            Uhr
         </div>
         <div class="desktop-icon" onclick="openWindow('settings-win')">
             <div class="icon-img">⚙️</div>
@@ -280,8 +340,8 @@
         </div>
         <div class="window-body">
             <textarea placeholder="Schreibe hier..."></textarea>
+            <div class="window-resizer" onclick="toggleResize('notepad-win')" title="Größe ändern">⤢</div>
         </div>
-        <div class="window-resizer" onclick="toggleResize('notepad-win')" title="Größe ändern">⤢</div>
     </div>
 
     <!-- Calculator Window -->
@@ -310,8 +370,42 @@
                 <button onclick="calcEquals()">=</button>
                 <button onclick="calcOp('+')">+</button>
             </div>
+            <div class="window-resizer" onclick="toggleResize('calc-win')" title="Größe ändern">⤢</div>
         </div>
-        <div class="window-resizer" onclick="toggleResize('calc-win')" title="Größe ändern">⤢</div>
+    </div>
+
+    <!-- Browser Window (NEU) -->
+    <div id="browser-win" class="window" onclick="bringToFront('browser-win')" style="left: 140px; top: 100px; width: 420px; height: 320px;">
+        <div class="window-header" onclick="toggleDrag('browser-win')">
+            <span>🌐 Internet Browser</span>
+            <button class="window-close" onclick="closeWindow('browser-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body">
+            <div class="browser-bar">
+                <input type="text" id="browser-url" value="https://www.google.com">
+                <button onclick="loadBrowserPage()">Gehe zu</button>
+            </div>
+            <div class="browser-content" id="browser-view">
+                <h3>Willkommen im Web!</h3>
+                <p>Gib oben eine Adresse ein und klicke auf "Gehe zu". (Dies ist ein sicherer Simulator-Browser).</p>
+            </div>
+            <div class="window-resizer" onclick="toggleResize('browser-win')" title="Größe ändern">⤢</div>
+        </div>
+    </div>
+
+    <!-- Clock App Window (NEU) -->
+    <div id="clock-win" class="window" onclick="bringToFront('clock-win')" style="left: 200px; top: 150px; width: 300px; height: 220px;">
+        <div class="window-header" onclick="toggleDrag('clock-win')">
+            <span>⏰ Uhr & Weltzeit</span>
+            <button class="window-close" onclick="closeWindow('clock-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body" style="padding:0;">
+            <div class="clock-app-container">
+                <div class="big-digital-clock" id="app-clock-display">00:00:00</div>
+                <div class="big-date" id="app-date-display">Datum laden...</div>
+            </div>
+            <div class="window-resizer" onclick="toggleResize('clock-win')" title="Größe ändern">⤢</div>
+        </div>
     </div>
 
     <!-- Settings Window -->
@@ -328,25 +422,18 @@
                 <button class="bg-btn" onclick="changeBackground('linear-gradient(135deg, #003d1a, #008a3d)')">🌲 Retro Matrix Grün</button>
                 <button class="bg-btn" onclick="changeBackground('#111111')">⬛ Tiefes Schwarz</button>
             </div>
+            <div class="window-resizer" onclick="toggleResize('settings-win')" title="Größe ändern">⤢</div>
         </div>
-        <div class="window-resizer" onclick="toggleResize('settings-win')" title="Größe ändern">⤢</div>
     </div>
 
     <!-- Start Menu -->
     <div id="start-menu">
         <h3>Angeheftet</h3>
-        <div class="start-app-item" onclick="openWindow('notepad-win'); toggleStart();">
-            📝 Notizblock
-        </div>
-        <div class="start-app-item" onclick="openWindow('calc-win'); toggleStart();">
-            🔢 Taschenrechner
-        </div>
-        <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">
-            ⚙️ Einstellungen
-        </div>
-        <div class="start-app-item" onclick="alert('Dyon TV Position Fix aktiv!');">
-            ℹ️ System-Info
-        </div>
+        <div class="start-app-item" onclick="openWindow('notepad-win'); toggleStart();">📝 Notizblock</div>
+        <div class="start-app-item" onclick="openWindow('calc-win'); toggleStart();">🔢 Taschenrechner</div>
+        <div class="start-app-item" onclick="openWindow('browser-win'); toggleStart();">🌐 Internet Browser</div>
+        <div class="start-app-item" onclick="openWindow('clock-win'); toggleStart();">⏰ Uhr App</div>
+        <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">⚙️ Einstellungen</div>
     </div>
 
     <!-- Taskbar -->
@@ -354,6 +441,8 @@
         <button class="taskbar-btn" onclick="toggleStart()" title="Start">⊞</button>
         <button class="taskbar-btn" onclick="openWindow('notepad-win')" title="Notizblock">📝</button>
         <button class="taskbar-btn" onclick="openWindow('calc-win')" title="Rechner">🔢</button>
+        <button class="taskbar-btn" onclick="openWindow('browser-win')" title="Browser">🌐</button>
+        <button class="taskbar-btn" onclick="openWindow('clock-win')" title="Uhr">⏰</button>
         <button class="taskbar-btn" onclick="openWindow('settings-win')" title="Einstellungen">⚙️</button>
         <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
@@ -451,9 +540,22 @@
             var d = new Date();
             var hours = d.getHours();
             var minutes = d.getMinutes();
+            var seconds = d.getSeconds();
+            
             if (hours < 10) hours = "0" + hours;
             if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            // Taskbar Uhr
             document.getElementById("clock").innerHTML = hours + ":" + minutes + "<br><small>Dyon TV</small>";
+
+            // Uhr App Anzeige
+            var appClock = document.getElementById("app-clock-display");
+            if(appClock) {
+                appClock.innerText = hours + ":" + minutes + ":" + seconds;
+                var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById("app-date-display").innerText = d.toLocaleDateString('de-DE', options);
+            }
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -467,6 +569,14 @@
             }
         }
 
+        // Browser Funktion
+        function loadBrowserPage() {
+            var url = document.getElementById("browser-url").value;
+            var view = document.getElementById("browser-view");
+            view.innerHTML = "<h3>Lade " + url + "...</h3><p>Verbindung erfolgreich hergestellt. Willst du nach etwas suchen?</p>";
+        }
+
+        // Calculator Logik
         var calcExpression = "";
         function calcNum(val) {
             calcExpression += val;
