@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (TV Paint Fix)</title>
+    <title>Windows 11 Simulator (Mit D1 & D2)</title>
     <style>
         body {
             margin: 0;
@@ -22,25 +22,25 @@
             left: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
         .desktop-icon {
             width: 70px;
-            height: 80px;
+            height: 75px;
             text-align: center;
             color: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             text-shadow: 1px 1px 2px black;
         }
         .desktop-icon div.icon-img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: #0078d7;
-            margin: 0 auto 5px auto;
+            margin: 0 auto 4px auto;
             border-radius: 8px;
-            line-height: 40px;
-            font-size: 20px;
+            line-height: 36px;
+            font-size: 18px;
         }
 
         /* Taskbar */
@@ -67,7 +67,7 @@
             color: white;
             font-size: 18px;
             cursor: pointer;
-            margin: 0 4px;
+            margin: 0 3px;
             outline: none;
         }
         .taskbar-btn:hover {
@@ -89,31 +89,32 @@
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
-            width: 320px;
-            height: 460px;
+            width: 300px;
+            height: 420px;
             background: rgba(30, 30, 30, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             display: none;
             flex-direction: column;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 1000;
             color: white;
+            overflow-y: auto;
         }
         #start-menu h3 {
             margin-top: 0;
-            font-size: 14px;
+            font-size: 13px;
             color: #aaa;
         }
         .start-app-item {
             background: rgba(255,255,255,0.05);
-            padding: 8px;
-            margin-bottom: 6px;
+            padding: 7px;
+            margin-bottom: 5px;
             border-radius: 4px;
             cursor: pointer;
             text-align: left;
-            font-size: 13px;
+            font-size: 12px;
         }
         .start-app-item:hover {
             background: rgba(255,255,255,0.15);
@@ -122,9 +123,9 @@
         /* Windows */
         .window {
             position: absolute;
-            top: 50px;
-            left: 50px;
-            width: 380px;
+            top: 40px;
+            left: 40px;
+            width: 420px;
             height: 320px;
             background: #f3f3f3;
             border: 1px solid #ccc;
@@ -133,19 +134,19 @@
             flex-direction: column;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 100;
-            max-height: calc(100vh - 80px);
-            max-width: calc(100vw - 50px);
+            max-height: calc(100vh - 70px);
+            max-width: calc(100vw - 40px);
         }
         .window-header {
-            height: 45px;
+            height: 40px;
             background: #e1e1e1;
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 12px;
-            font-size: 14px;
+            padding: 0 10px;
+            font-size: 13px;
             font-weight: bold;
             color: #333;
             cursor: pointer;
@@ -162,11 +163,11 @@
             background: #e81123;
             color: white;
             border: none;
-            width: 30px;
-            height: 26px;
+            width: 28px;
+            height: 24px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
         }
         .window-body {
             flex: 1;
@@ -191,8 +192,8 @@
             position: absolute;
             bottom: -8px;
             right: -8px;
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             background: #e1e1e1;
             border: 1px solid #adadad;
             border-radius: 6px;
@@ -200,7 +201,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #333;
             z-index: 10;
@@ -210,25 +211,25 @@
         /* Calculator styles */
         #calc-display {
             width: 100%;
-            height: 45px;
+            height: 40px;
             background: white;
             border: 1px solid #ccc;
-            font-size: 22px;
+            font-size: 20px;
             text-align: right;
-            padding: 8px;
+            padding: 6px;
             box-sizing: border-box;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .calc-keys {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 5px;
             flex: 1;
         }
         .calc-keys button {
             background: #fff;
             border: 1px solid #ccc;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             border-radius: 4px;
         }
@@ -240,18 +241,18 @@
         .settings-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            font-size: 13px;
+            gap: 8px;
+            font-size: 12px;
             color: #333;
         }
         .bg-btn {
-            padding: 10px;
+            padding: 8px;
             background: #e1e1e1;
             border: 1px solid #ccc;
             cursor: pointer;
             border-radius: 4px;
             text-align: left;
-            font-size: 13px;
+            font-size: 12px;
         }
         .bg-btn:hover {
             background: #d0d0d0;
@@ -261,29 +262,31 @@
         .browser-bar {
             display: flex;
             gap: 5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .browser-bar input {
             flex: 1;
-            padding: 6px;
+            padding: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 12px;
         }
         .browser-bar button {
-            padding: 6px 12px;
+            padding: 5px 10px;
             background: #0078d7;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 12px;
         }
         .browser-content {
             flex: 1;
             border: 1px solid #ddd;
             background: #fff;
-            padding: 10px;
+            padding: 8px;
             overflow-y: auto;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         /* Clock App styles */
@@ -298,17 +301,17 @@
             border-radius: 4px;
         }
         .big-digital-clock {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: bold;
             font-family: monospace;
         }
         .big-date {
-            font-size: 16px;
+            font-size: 15px;
             color: #aaa;
             margin-top: 5px;
         }
 
-        /* TV-Paint App styles (Klick-basiert statt Ziehen) */
+        /* Paint App styles */
         .paint-toolbar {
             display: flex;
             gap: 5px;
@@ -316,8 +319,8 @@
             align-items: center;
         }
         .color-btn {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border: 2px solid #333;
             border-radius: 50%;
             cursor: pointer;
@@ -344,12 +347,21 @@
             box-sizing: border-box;
         }
         .weather-temp {
-            font-size: 42px;
+            font-size: 40px;
             font-weight: bold;
         }
         .weather-desc {
-            font-size: 16px;
+            font-size: 15px;
             margin-top: 5px;
+        }
+
+        /* Iframe App Stile */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -357,13 +369,15 @@
 
     <!-- Desktop Icons -->
     <div class="desktop-icons">
-        <div class="desktop-icon" onclick="openWindow('notepad-win')"><div class="icon-img">📝</div>Notizblock</div>
+        <div class="desktop-icon" onclick="openWindow('notepad-win')"><div class="icon-img">📝</div>Notiz</div>
         <div class="desktop-icon" onclick="openWindow('calc-win')"><div class="icon-img">🔢</div>Rechner</div>
         <div class="desktop-icon" onclick="openWindow('browser-win')"><div class="icon-img">🌐</div>Browser</div>
         <div class="desktop-icon" onclick="openWindow('clock-win')"><div class="icon-img">⏰</div>Uhr</div>
         <div class="desktop-icon" onclick="openWindow('paint-win')"><div class="icon-img">🎨</div>Paint</div>
         <div class="desktop-icon" onclick="openWindow('weather-win')"><div class="icon-img">⛅</div>Wetter</div>
-        <div class="desktop-icon" onclick="openWindow('settings-win')"><div class="icon-img">⚙️</div>Einstellungen</div>
+        <div class="desktop-icon" onclick="openWindow('d1-win')"><div class="icon-img">🚀</div>Projekt D1</div>
+        <div class="desktop-icon" onclick="openWindow('d2-win')"><div class="icon-img">⚡</div>Projekt D2</div>
+        <div class="desktop-icon" onclick="openWindow('settings-win')"><div class="icon-img">⚙️</div>Setup</div>
     </div>
 
     <!-- Notepad Window -->
@@ -379,7 +393,7 @@
     </div>
 
     <!-- Calculator Window -->
-    <div id="calc-win" class="window" onclick="bringToFront('calc-win')" style="left: 100px; top: 80px; width: 280px; height: 360px;">
+    <div id="calc-win" class="window" onclick="bringToFront('calc-win')" style="left: 80px; top: 60px; width: 260px; height: 340px;">
         <div class="window-header" onclick="toggleDrag('calc-win')">
             <span>🔢 Rechner</span>
             <button class="window-close" onclick="closeWindow('calc-win'); event.stopPropagation();">X</button>
@@ -397,7 +411,7 @@
     </div>
 
     <!-- Browser Window -->
-    <div id="browser-win" class="window" onclick="bringToFront('browser-win')" style="left: 140px; top: 100px; width: 420px; height: 320px;">
+    <div id="browser-win" class="window" onclick="bringToFront('browser-win')" style="left: 120px; top: 80px; width: 400px; height: 300px;">
         <div class="window-header" onclick="toggleDrag('browser-win')">
             <span>🌐 Internet Browser</span>
             <button class="window-close" onclick="closeWindow('browser-win'); event.stopPropagation();">X</button>
@@ -416,7 +430,7 @@
     </div>
 
     <!-- Clock App Window -->
-    <div id="clock-win" class="window" onclick="bringToFront('clock-win')" style="left: 200px; top: 150px; width: 300px; height: 220px;">
+    <div id="clock-win" class="window" onclick="bringToFront('clock-win')" style="left: 160px; top: 100px; width: 280px; height: 200px;">
         <div class="window-header" onclick="toggleDrag('clock-win')">
             <span>⏰ Uhr & Weltzeit</span>
             <button class="window-close" onclick="closeWindow('clock-win'); event.stopPropagation();">X</button>
@@ -430,36 +444,36 @@
         </div>
     </div>
 
-    <!-- Paint Window (TV-optimiert per Klick) -->
-    <div id="paint-win" class="window" onclick="bringToFront('paint-win')" style="left: 220px; top: 80px; width: 400px; height: 360px;">
+    <!-- Paint Window -->
+    <div id="paint-win" class="window" onclick="bringToFront('paint-win')" style="left: 180px; top: 70px; width: 380px; height: 330px;">
         <div class="window-header" onclick="toggleDrag('paint-win')">
             <span>🎨 Paint (TV-Klick-Modus)</span>
             <button class="window-close" onclick="closeWindow('paint-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body">
             <div class="paint-toolbar">
-                <span style="font-size:12px;">Farbe:</span>
+                <span style="font-size:11px;">Farbe:</span>
                 <div class="color-btn" style="background:#0078d7;" onclick="setPaintColor('#0078d7')"></div>
                 <div class="color-btn" style="background:#e81123;" onclick="setPaintColor('#e81123')"></div>
                 <div class="color-btn" style="background:#107c10;" onclick="setPaintColor('#107c10')"></div>
                 <div class="color-btn" style="background:#ffb900;" onclick="setPaintColor('#ffb900')"></div>
-                <button onclick="clearPaintCanvas()" style="margin-left:auto; font-size:11px; padding:3px 6px; cursor:pointer;">Löschen</button>
+                <button onclick="clearPaintCanvas()" style="margin-left:auto; font-size:10px; padding:2px 5px; cursor:pointer;">Löschen</button>
             </div>
             <canvas id="tv-paint-canvas" onclick="paintClick(event)"></canvas>
-            <div style="font-size: 10px; color: #666; margin-top: 3px;">Klicke 2x auf das Bild: 1. Klick = Start, 2. Klick = Linie zeichnen!</div>
+            <div style="font-size: 9px; color: #666; margin-top: 2px;">1. Klick = Start, 2. Klick = Linie ziehen!</div>
             <div class="window-resizer" onclick="toggleResize('paint-win')" title="Größe ändern">⤢</div>
         </div>
     </div>
 
     <!-- Weather Window -->
-    <div id="weather-win" class="window" onclick="bringToFront('weather-win')" style="left: 260px; top: 120px; width: 260px; height: 200px;">
+    <div id="weather-win" class="window" onclick="bringToFront('weather-win')" style="left: 220px; top: 110px; width: 250px; height: 180px;">
         <div class="window-header" onclick="toggleDrag('weather-win')">
             <span>⛅ Wetter</span>
             <button class="window-close" onclick="closeWindow('weather-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body" style="padding: 0;">
             <div class="weather-container">
-                <div style="font-size: 13px;">📍 Aktueller Standort</div>
+                <div style="font-size: 12px;">📍 Aktueller Standort</div>
                 <div class="weather-temp">21°C</div>
                 <div class="weather-desc">☀️ Sonnig & Angenehm</div>
             </div>
@@ -467,8 +481,32 @@
         </div>
     </div>
 
+    <!-- Projekt D1 Window -->
+    <div id="d1-win" class="window" onclick="bringToFront('d1-win')" style="left: 100px; top: 90px; width: 450px; height: 350px;">
+        <div class="window-header" onclick="toggleDrag('d1-win')">
+            <span>🚀 Projekt D1</span>
+            <button class="window-close" onclick="closeWindow('d1-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body" style="padding: 0;">
+            <iframe src="https://idkidc7000-lang.github.io/D1/" class="iframe-container"></iframe>
+            <div class="window-resizer" onclick="toggleResize('d1-win')" title="Größe ändern">⤢</div>
+        </div>
+    </div>
+
+    <!-- Projekt D2 Window -->
+    <div id="d2-win" class="window" onclick="bringToFront('d2-win')" style="left: 140px; top: 120px; width: 450px; height: 350px;">
+        <div class="window-header" onclick="toggleDrag('d2-win')">
+            <span>⚡ Projekt D2</span>
+            <button class="window-close" onclick="closeWindow('d2-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body" style="padding: 0;">
+            <iframe src="https://idkidc7000-lang.github.io/D2/" class="iframe-container"></iframe>
+            <div class="window-resizer" onclick="toggleResize('d2-win')" title="Größe ändern">⤢</div>
+        </div>
+    </div>
+
     <!-- Settings Window -->
-    <div id="settings-win" class="window" onclick="bringToFront('settings-win')" style="left: 180px; top: 130px; width: 340px; height: 310px;">
+    <div id="settings-win" class="window" onclick="bringToFront('settings-win')" style="left: 200px; top: 100px; width: 320px; height: 280px;">
         <div class="window-header" onclick="toggleDrag('settings-win')">
             <span>⚙️ Einstellungen</span>
             <button class="window-close" onclick="closeWindow('settings-win'); event.stopPropagation();">X</button>
@@ -494,6 +532,8 @@
         <div class="start-app-item" onclick="openWindow('clock-win'); toggleStart();">⏰ Uhr App</div>
         <div class="start-app-item" onclick="openWindow('paint-win'); toggleStart();">🎨 Paint</div>
         <div class="start-app-item" onclick="openWindow('weather-win'); toggleStart();">⛅ Wetter</div>
+        <div class="start-app-item" onclick="openWindow('d1-win'); toggleStart();">🚀 Projekt D1</div>
+        <div class="start-app-item" onclick="openWindow('d2-win'); toggleStart();">⚡ Projekt D2</div>
         <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">⚙️ Einstellungen</div>
     </div>
 
@@ -506,6 +546,8 @@
         <button class="taskbar-btn" onclick="openWindow('clock-win')" title="Uhr">⏰</button>
         <button class="taskbar-btn" onclick="openWindow('paint-win')" title="Paint">🎨</button>
         <button class="taskbar-btn" onclick="openWindow('weather-win')" title="Wetter">⛅</button>
+        <button class="taskbar-btn" onclick="openWindow('d1-win')" title="Projekt D1">🚀</button>
+        <button class="taskbar-btn" onclick="openWindow('d2-win')" title="Projekt D2">⚡</button>
         <button class="taskbar-btn" onclick="openWindow('settings-win')" title="Einstellungen">⚙️</button>
         <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
@@ -631,15 +673,10 @@
             view.innerHTML = "<h3>Lade " + url + "...</h3><p>Verbindung erfolgreich hergestellt.</p>";
         }
 
-        // TV-Paint Logik (Klick statt Ziehen)
-        var paintColor = '#0078d7';
-        var lastPaintX = null;
-        var lastPaintY = null;
-
         function initPaint() {
             var canvas = document.getElementById('tv-paint-canvas');
             canvas.width = canvas.parentElement.clientWidth - 20;
-            canvas.height = 180;
+            canvas.height = 170;
             var ctx = canvas.getContext('2d');
             if(!canvas.dataset.initialized) {
                 ctx.fillStyle = "white";
@@ -647,6 +684,10 @@
                 canvas.dataset.initialized = "true";
             }
         }
+
+        var paintColor = '#0078d7';
+        var lastPaintX = null;
+        var lastPaintY = null;
 
         function setPaintColor(color) {
             paintColor = color;
@@ -669,13 +710,11 @@
             var ctx = canvas.getContext('2d');
 
             if (lastPaintX === null || lastPaintY === null) {
-                // Erster Klick: Startpunkt setzen
                 lastPaintX = x;
                 lastPaintY = y;
                 ctx.fillStyle = paintColor;
                 ctx.fillRect(x - 3, y - 3, 6, 6);
             } else {
-                // Zweiter Klick: Linie zum Zielpunkt ziehen
                 ctx.strokeStyle = paintColor;
                 ctx.lineWidth = 4;
                 ctx.lineCap = 'round';
@@ -684,7 +723,6 @@
                 ctx.lineTo(x, y);
                 ctx.stroke();
                 
-                // Zurücksetzen für den nächsten Strich
                 lastPaintX = null;
                 lastPaintY = null;
             }
@@ -707,5 +745,4 @@
         }
     </script>
 </body>
-    </html>
-    
+</html>
