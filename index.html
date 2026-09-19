@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (Mit D1 & D2)</title>
+    <title>Windows 11 Simulator (Mit D1 & D3)</title>
     <style>
         body {
             margin: 0;
@@ -376,7 +376,7 @@
         <div class="desktop-icon" onclick="openWindow('paint-win')"><div class="icon-img">🎨</div>Paint</div>
         <div class="desktop-icon" onclick="openWindow('weather-win')"><div class="icon-img">⛅</div>Wetter</div>
         <div class="desktop-icon" onclick="openWindow('d1-win')"><div class="icon-img">🚀</div>Projekt D1</div>
-        <div class="desktop-icon" onclick="openWindow('d2-win')"><div class="icon-img">⚡</div>Projekt D2</div>
+        <div class="desktop-icon" onclick="openWindow('d3-win')"><div class="icon-img">⚡</div>Projekt D3</div>
         <div class="desktop-icon" onclick="openWindow('settings-win')"><div class="icon-img">⚙️</div>Setup</div>
     </div>
 
@@ -493,15 +493,15 @@
         </div>
     </div>
 
-    <!-- Projekt D2 Window -->
-    <div id="d2-win" class="window" onclick="bringToFront('d2-win')" style="left: 140px; top: 120px; width: 450px; height: 350px;">
-        <div class="window-header" onclick="toggleDrag('d2-win')">
-            <span>⚡ Projekt D2</span>
-            <button class="window-close" onclick="closeWindow('d2-win'); event.stopPropagation();">X</button>
+    <!-- Projekt D3 Window (Aktualisiert) -->
+    <div id="d3-win" class="window" onclick="bringToFront('d3-win')" style="left: 140px; top: 120px; width: 450px; height: 350px;">
+        <div class="window-header" onclick="toggleDrag('d3-win')">
+            <span>⚡ Projekt D3</span>
+            <button class="window-close" onclick="closeWindow('d3-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body" style="padding: 0;">
-            <iframe src="https://idkidc7000-lang.github.io/D2/" class="iframe-container"></iframe>
-            <div class="window-resizer" onclick="toggleResize('d2-win')" title="Größe ändern">⤢</div>
+            <iframe src="https://idkidc7000-lang.github.io/D3/" class="iframe-container"></iframe>
+            <div class="window-resizer" onclick="toggleResize('d3-win')" title="Größe ändern">⤢</div>
         </div>
     </div>
 
@@ -533,7 +533,7 @@
         <div class="start-app-item" onclick="openWindow('paint-win'); toggleStart();">🎨 Paint</div>
         <div class="start-app-item" onclick="openWindow('weather-win'); toggleStart();">⛅ Wetter</div>
         <div class="start-app-item" onclick="openWindow('d1-win'); toggleStart();">🚀 Projekt D1</div>
-        <div class="start-app-item" onclick="openWindow('d2-win'); toggleStart();">⚡ Projekt D2</div>
+        <div class="start-app-item" onclick="openWindow('d3-win'); toggleStart();">⚡ Projekt D3</div>
         <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">⚙️ Einstellungen</div>
     </div>
 
@@ -547,7 +547,7 @@
         <button class="taskbar-btn" onclick="openWindow('paint-win')" title="Paint">🎨</button>
         <button class="taskbar-btn" onclick="openWindow('weather-win')" title="Wetter">⛅</button>
         <button class="taskbar-btn" onclick="openWindow('d1-win')" title="Projekt D1">🚀</button>
-        <button class="taskbar-btn" onclick="openWindow('d2-win')" title="Projekt D2">⚡</button>
+        <button class="taskbar-btn" onclick="openWindow('d3-win')" title="Projekt D3">⚡</button>
         <button class="taskbar-btn" onclick="openWindow('settings-win')" title="Einstellungen">⚙️</button>
         <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
