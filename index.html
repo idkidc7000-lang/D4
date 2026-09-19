@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Windows 11 Simulator (TV Edition)</title>
+    <title>Windows 11 Simulator (Settings Edition)</title>
     <style>
         body {
             margin: 0;
@@ -146,7 +146,6 @@
             color: #333;
             cursor: pointer;
         }
-        /* Wenn Fenster am Cursor klebt, Header gelb markieren als Signal */
         .window.dragging .window-header {
             background: #fce100;
         }
@@ -163,6 +162,8 @@
             flex: 1;
             padding: 10px;
             overflow: hidden;
+            background: white;
+            box-sizing: border-box;
         }
         .window-body textarea {
             width: 100%;
@@ -201,9 +202,29 @@
         .calc-keys button:hover {
             background: #e5e5e5;
         }
+
+        /* Settings styles */
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            color: #333;
+        }
+        .bg-btn {
+            padding: 8px;
+            background: #e1e1e1;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: left;
+        }
+        .bg-btn:hover {
+            background: #d0d0d0;
+        }
     </style>
 </head>
-<body onmousemove="moveWindow(event)">
+<body id="main-desktop" onmousemove="moveWindow(event)" style="background-image: linear-gradient(135deg, #005c8a, #002b3d);">
 
     <!-- Desktop Icons -->
     <div class="desktop-icons">
@@ -215,12 +236,16 @@
             <div class="icon-img">🔢</div>
             Rechner
         </div>
+        <div class="desktop-icon" onclick="openWindow('settings-win')">
+            <div class="icon-img">⚙️</div>
+            Einstellungen
+        </div>
     </div>
 
     <!-- Notepad Window -->
     <div id="notepad-win" class="window" onclick="bringToFront('notepad-win')">
         <div class="window-header" onclick="toggleDrag('notepad-win')">
-            <span>Editor - Notizblock (Klick zum Bewegen)</span>
+            <span>Editor - Notizblock</span>
             <button class="window-close" onclick="closeWindow('notepad-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body">
@@ -229,9 +254,9 @@
     </div>
 
     <!-- Calculator Window -->
-    <div id="calc-win" class="window" onclick="bringToFront('calc-win')" style="left: 120px; top: 90px; width: 260px; height: 310px;">
+    <div id="calc-win" class="window" onclick="bringToFront('calc-win')" style="left: 100px; top: 80px; width: 260px; height: 310px;">
         <div class="window-header" onclick="toggleDrag('calc-win')">
-            <span>Taschenrechner (Klick zum Bewegen)</span>
+            <span>Taschenrechner</span>
             <button class="window-close" onclick="closeWindow('calc-win'); event.stopPropagation();">X</button>
         </div>
         <div class="window-body">
@@ -257,6 +282,23 @@
         </div>
     </div>
 
+    <!-- Settings Window -->
+    <div id="settings-win" class="window" onclick="bringToFront('settings-win')" style="left: 180px; top: 130px; width: 320px; height: 260px;">
+        <div class="window-header" onclick="toggleDrag('settings-win')">
+            <span>Einstellungen - Desktop</span>
+            <button class="window-close" onclick="closeWindow('settings-win'); event.stopPropagation();">X</button>
+        </div>
+        <div class="window-body">
+            <div class="settings-container">
+                <strong>Hintergrundbild wählen:</strong>
+                <button class="bg-btn" onclick="changeBackground('linear-gradient(135deg, #005c8a, #002b3d)')">🌊 Klassisch Blau (Standard)</button>
+                <button class="bg-btn" onclick="changeBackground('linear-gradient(135deg, #2b003d, #5a008a)')">🌌 Violette Galaxie</button>
+                <button class="bg-btn" onclick="changeBackground('linear-gradient(135deg, #003d1a, #008a3d)')">🌲 Retro Matrix Grün</button>
+                <button class="bg-btn" onclick="changeBackground('#111111')">⬛ Tiefes Schwarz</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Start Menu -->
     <div id="start-menu">
         <h3>Angeheftet</h3>
@@ -266,7 +308,10 @@
         <div class="start-app-item" onclick="openWindow('calc-win'); toggleStart();">
             🔢 Taschenrechner
         </div>
-        <div class="start-app-item" onclick="alert('Dyon TV Windows 11 laeuft super!');">
+        <div class="start-app-item" onclick="openWindow('settings-win'); toggleStart();">
+            ⚙️ Einstellungen
+        </div>
+        <div class="start-app-item" onclick="alert('Dyon TV Customizer aktiv!');">
             ℹ️ System-Info
         </div>
     </div>
@@ -276,14 +321,13 @@
         <button class="taskbar-btn" onclick="toggleStart()" title="Start">⊞</button>
         <button class="taskbar-btn" onclick="openWindow('notepad-win')" title="Notizblock">📝</button>
         <button class="taskbar-btn" onclick="openWindow('calc-win')" title="Rechner">🔢</button>
+        <button class="taskbar-btn" onclick="openWindow('settings-win')" title="Einstellungen">⚙️</button>
         <div id="clock">00:00<br><small>Dyon TV</small></div>
     </div>
 
     <script>
         var highestZ = 100;
         var activeDraggedWindow = null;
-        var offsetX = 0;
-        var offsetY = 0;
 
         function toggleStart() {
             var menu = document.getElementById("start-menu");
@@ -313,19 +357,15 @@
             document.getElementById(id).style.zIndex = highestZ;
         }
 
-        // Ein-Klick-Toggle zum Greifen und Loslassen für Fernbedienungen
         function toggleDrag(id) {
             var win = document.getElementById(id);
             if (activeDraggedWindow === id) {
-                // Loslassen
                 activeDraggedWindow = null;
                 win.classList.remove("dragging");
             } else {
-                // Wenn ein anderes Fenster aktiv war, das erst loslassen
                 if (activeDraggedWindow) {
                     document.getElementById(activeDraggedWindow).classList.remove("dragging");
                 }
-                // Greifen
                 activeDraggedWindow = id;
                 win.classList.add("dragging");
                 bringToFront(id);
@@ -333,16 +373,13 @@
             event.stopPropagation();
         }
 
-        // Fenster bewegen, wenn es im "Aktiv"-Modus ist
         function moveWindow(e) {
             if (!activeDraggedWindow) return;
             var win = document.getElementById(activeDraggedWindow);
-            // Zentriert das Fenster leicht unter den Cursor beim Bewegen
             win.style.left = (e.clientX - 100) + "px";
             win.style.top = (e.clientY - 15) + "px";
         }
 
-        // Clock Update
         function updateClock() {
             var d = new Date();
             var hours = d.getHours();
@@ -353,6 +390,17 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        // Settings App Logic (Background Changer)
+        function changeBackground(bgValue) {
+            var desk = document.getElementById("main-desktop");
+            desk.style.backgroundImage = "none";
+            desk.style.backgroundColor = bgValue;
+            // Falls es ein Gradient ist, setzen wir ihn über die backgroundImage Eigenschaft
+            if (bgValue.indexOf("gradient") !== -1) {
+                desk.style.backgroundImage = bgValue;
+            }
+        }
 
         // Calculator Logic
         var calcExpression = "";
@@ -381,4 +429,3 @@
     </script>
 </body>
 </html>
-
